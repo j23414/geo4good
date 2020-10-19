@@ -43,3 +43,8 @@ h1,h2,h3 {
   background-color: #ffffff;
   padding: 30px 30px 30px;
 }
+
+#map {
+  height: 400px;
+  width: 100%;
+}
