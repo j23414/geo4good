@@ -40,29 +40,66 @@ var maskL8 = function(image) {
 }
 
 // Map the function over one year of Landsat 8 TOA data and take the median.
-var composite = L8
-    .filterDate('2016-01-01', '2016-12-31')                     // Pick a time frame
-    .map(maskL8)                                                // Remove Clouds
-    .filterBounds(Iowa)                                         // Only images over Iowa
-    .median();
-var image = ee.Image(composite);
-var RGB_VIS = {min: 0, max: 0.3, gamma: 1.5, bands: ['B4', 'B3', 'B2']};  // Render 3 bands
-var title = ui.Label("LANDSAT/LC08/C01/T1_TOA over Iowa");
-title.style().set({
+var L8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA")
+    .filterDate('2016-01-01', '2016-12-31')    // Select data range
+    .filterBounds(Iowa);                       // Only images of Iowa
+var L8_nocloud = L8.map(maskL8)                // Create cloudless Iowa
+
+// //////////////// User Interface ////////////////
+var RGB_VIS = {min: 0, max: 0.3, gamma: 1.5, bands: ['B4', 'B3', 'B2']};
+var map1 = ui.Map();
+map1.add(ui.Panel({
+ widgets:[ui.Label('Original')],
+ style: {position: 'bottom-left'}
+}));
+map1.addLayer(L8.median(), RGB_VIS, 'RGB');
+
+var map2 = ui.Map();
+map2.add(ui.Panel({
+  widgets:[ui.Label('Mask Clouds')],
+  style: {position: 'bottom-right'}
+}));
+map2.addLayer(L8_nocloud.median(), RGB_VIS, 'RGB (masked)');
+
+map1.setCenter(IAlat, IAlong, 6);
+
+// Create an empty image into which to paint the features, cast to byte.
+var empty = ee.Image().byte();
+
+// Paint all the polygon edges with the same number and width, display.
+var outline = empty.paint({
+  featureCollection: Iowa,
+  color: 1,
+  width: 3
+});
+
+map1.addLayer(outline, {palette: 'FF0000'}, 'edges');
+map2.addLayer(outline, {palette: 'FF0000'}, 'edges');
+
+// Link the two maps.
+var linker = ui.Map.Linker([map1,map2]);
+
+// Make a split map.
+var splitMap = ui.SplitPanel({
+  firstPanel: map1,
+  secondPanel: map2,
+  wipe: true,
+});
+
+ui.root.widgets().reset([splitMap]);
+
+// //////////////// Initialize ////////////////
+
+
+var title1 = ui.Label("Original Iowa");
+title1.style().set({
+  position: 'top-center'
+})
+var title2 = ui.Label("Cloudless Iowa");
+title2.style().set({
   position: 'top-center'
 })
 
-var panel = ui.Panel();
-panel.style().set({
-  width: '400px',
-  position: 'bottom-right'
-});
-
-// Organize Elements
-//Map.addLayer(image, {bands:['B4','B3','B2'], min: 0, max: 0.3});
-Map.setCenter(IAlat, IAlong, 4);
-Map.addLayer(image, RGB_VIS, 'RGB');
-Map.add(title);
-Map.add(panel)
-
+map1.add(title1);
+map2.add(title2);
 ```
