@@ -6,7 +6,23 @@ Prep for Geo for Good Summit, mostly a quick run through of online tutorials
 * You'll need to register a API key (and probably enter billing information, hopefully will get free trial to test it out first)
 * Then restrict the API either by website or API(?), the dashboard walks through the steps
 
-**Javascript**
+## Live Website 
+
+<img src="imgs/webview.png" width=600/>
+
+Built via a combination of tutorials
+
+* pull data (Landsat 8)
+* subset to a polygon (Iowa)
+* apply a mask (to remove clouds)
+* and create a responsive view (split map to highlight difference between original vs cloudless Iowa). 
+
+Future work could be 
+
+* identifying regions of interest (vegetation, rivers/lakes, average cloud cover) 
+* and time series analysis (flood changes, crop land changes).
+
+**Google Earth Engine Javascript**
 
 ```
 var L8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA"),       // Load Landsat 8 data
