@@ -8,7 +8,7 @@ Prep for Geo for Good Summit, mostly a quick run through of online tutorials
 
 ## Live Website 
 
-<img src="imgs/webview.png" width=600/>
+<img src="imgs/webview.png" />
 
 Built via a combination of tutorials
 
