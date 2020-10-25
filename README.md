@@ -15,7 +15,7 @@ Built via a combination of tutorials
 * pull data (Landsat 8)
 * subset to a polygon (Iowa)
 * apply a mask (to remove clouds)
-* and create a responsive view (split map to highlight difference between original vs cloudless Iowa). 
+* and create an interactive view (draggable split map to highlight difference between original vs cloudless Iowa). 
 
 Future work could be 
 
